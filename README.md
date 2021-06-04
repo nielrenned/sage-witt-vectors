@@ -1,6 +1,6 @@
 # Sage Witt Vectors
 
-This is an implementation of the algorithms in Luís Finotti's paper *Computations with Witt Vectors and the Greenberg Transform* in SageMath. There is an implementation in Magma [here](https://github.com/lrfinotti/witt).
+This is a SageMath implementation of the algorithms in Luís Finotti's paper *Computations with Witt Vectors and the Greenberg Transform*. There is an implementation in Magma [here](https://github.com/lrfinotti/witt).
 
 # Documentation
 
