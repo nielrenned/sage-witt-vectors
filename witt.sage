@@ -167,6 +167,14 @@ class WittVector(CommutativeRingElement):
             inv_vec[i] = -poly.constant_coefficient() / poly.monomial_coefficient(gens[i-1])
         return P(inv_vec)
     
+    def __neg__(self):
+        P = self.parent()
+        if P.prime == 2:
+            all_ones = P(tuple(1 for _ in range(self.prec)))
+            return all_ones*self
+        neg_vec = tuple(-self.vec[i] for i in range(self.prec))
+        return P(neg_vec)
+    
     def xi(self, n):
         P = self.parent()
         p = P.prime
