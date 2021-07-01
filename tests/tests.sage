@@ -111,7 +111,6 @@ class TestArithmeticOperations(unittest.TestCase):
                     y = magma('WittProd(v1, v2 : choice:=3)')
                     self.assertEqual(x.vec, tuple(y))
     
-    @unittest.skip("We haven't implemented division yet.")
     def test_division(self):
         for p in self.primes:
             for prec in self.precisions[p]:
