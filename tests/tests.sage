@@ -1,6 +1,10 @@
 import os
 import unittest
 
+'''
+Run this file with Sage from the tests directory.
+'''
+
 sage.repl.load.load('../witt.sage', globals())
 magma.chdir('finotti-witt/')
 magma.load('witt.m')
