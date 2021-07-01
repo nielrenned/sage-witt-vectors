@@ -154,6 +154,7 @@ class WittVector(CommutativeRingElement):
         if self.vec[0].is_zero():
             raise ZeroDivisionError(f"Inverse of {self} does not exist.")
         P = self.parent()
+        C = self.__class__
         if self.prec == 1:
             return P((self.vec[0]^-1, ))
         var_names = [f'Y{i}' for i in range(1, self.prec)]
@@ -165,15 +166,16 @@ class WittVector(CommutativeRingElement):
         for i in range(1, self.prec):
             poly = prod_vec[i](inv_vec[1:])
             inv_vec[i] = -poly.constant_coefficient() / poly.monomial_coefficient(gens[i-1])
-        return P(inv_vec)
+        return C(P, vec=inv_vec)
     
-    def __neg__(self):
+    def _neg_(self):
         P = self.parent()
+        C = self.__class__
         if P.prime == 2:
             all_ones = P(tuple(1 for _ in range(self.prec)))
             return all_ones*self
         neg_vec = tuple(-self.vec[i] for i in range(self.prec))
-        return P(neg_vec)
+        return C(P, vec=neg_vec)
     
     def xi(self, n):
         P = self.parent()
