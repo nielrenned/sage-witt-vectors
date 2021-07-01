@@ -29,13 +29,14 @@ class TestIntConversion(unittest.TestCase):
         pass
 
 class TestUnaryOperations(unittest.TestCase):
-    @unittest.skip("We haven't implemented negation yet.")
     def test_negation(self):
         for p in Primes()[:10]:
-            for prec in range(1, 20):
+            precisions = range(1, 20) if p > 2 else range(1, 5)
+            op_method  = 'none'       if p > 2 else 'finotti_fly'
+            for prec in precisions:
                 n = randint(0, p^prec - 1)
                 with self.subTest(p=p, prec=prec, n=n):
-                    W = WittRing(GF(p), prec=prec, op_method='none')
+                    W = WittRing(GF(p), prec=prec, op_method=op_method)
                     x = -W(n)
                     y = magma(f'WittNeg(IntToWitt({n}, {p}, {prec-1}) : choice:=3)')
                     self.assertEqual(x.vec, tuple(y))
