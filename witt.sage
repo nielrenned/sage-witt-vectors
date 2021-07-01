@@ -30,7 +30,6 @@ def _fast_char_p_power(x, n):
     
     x_to_the_n = 1
     
-    t0 = time.time()
     for p_exp, digit in enumerate(base_p_digits):
         if digit == 0:
             continue
