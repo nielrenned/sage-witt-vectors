@@ -37,33 +37,31 @@ class TestUnaryOperations(unittest.TestCase):
                 with self.subTest(p=p, prec=prec, n=n):
                     W = WittRing(GF(p), prec=prec, op_method='none')
                     x = -W(n)
-                    y = magma(f'WittNeg(IntToWitt({n1}, {p}, {prec-1}) : choice:=3)')
+                    y = magma(f'WittNeg(IntToWitt({n}, {p}, {prec-1}) : choice:=3)')
                     self.assertEqual(x.vec, tuple(y))
     
-    @unittest.skip("We haven't implemented inversion yet.")
     def test_inversion(self):
-        for p in Primes()[:10]:
-            for prec in range(1, 20):
+        for p in Primes()[:6]:
+            for prec in range(1, 5):
                 n = randint(0, p^prec - 1)
                 while n % p == 0:
                     n = randint(0, p^prec - 1)
                 with self.subTest(p=p, prec=prec, n=n):
-                    W = WittRing(GF(p), prec=prec, op_method='none')
-                    x = 1 / W(n)
-                    y = magma('WittInv(IntToWitt({n1}, {p}, {prec-1}) : choice:=3)')
+                    W = WittRing(GF(p), prec=prec, op_method='finotti_fly')
+                    x = W(n)^(-1)
+                    y = magma(f'WittInv(IntToWitt({n}, {p}, {prec-1}) : choice:=3)')
                     self.assertEqual(x.vec, tuple(y))
     
-    @unittest.skip("We haven't implemented inversion yet.")
     def test_inversion_of_non_unit(self):
-        for p in Primes()[:10]:
-            for prec in range(1, 20):
+        for p in Primes()[:6]:
+            for prec in range(1, 5):
                 n = randint(0, p^prec - 1)
                 with self.subTest(p=p, prec=prec, n=n):
-                    W = WittRing(GF(p), prec=prec, op_method='none')
+                    W = WittRing(GF(p), prec=prec, op_method='finotti_fly')
                     t = list(W(n).vec)
                     t[0] = GF(p)(0)
                     with self.assertRaises(ZeroDivisionError):
-                        _ = 1 / W(t)
+                        _ = W(t)^(-1)
         
 
 # These tests should really pick a random field, and then random elements from that field
