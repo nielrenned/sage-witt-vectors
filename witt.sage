@@ -150,22 +150,40 @@ class WittVector(CommutativeRingElement):
         else:
             return NotImplemented
     
-    def __invert__(self):
+    def _div_(self, other):
+        P = self.parent()
+        # As a slight optimization, we'll check for one ahead of time.
+        # This also has the benefit of allowing us to create polynomials, even
+        # if we choose 'none' as the op_method
+        if other == P.one():
+            return self
+        elif self == P.one():
+            return other._invert_()
+        
+        return self * other._invert_()
+    
+    def _invert_(self):
         if self.vec[0].is_zero():
             raise ZeroDivisionError(f"Inverse of {self} does not exist.")
         P = self.parent()
         C = self.__class__
+        
+        if self == P.one():
+            return self
         if self.prec == 1:
             return P((self.vec[0]^-1, ))
+        
         var_names = [f'Y{i}' for i in range(1, self.prec)]
         poly_ring = PolynomialRing(P.base(), var_names)
         gens = poly_ring.gens()
-        inv_vec = list( (self.vec[0]^-1, ) + gens )
+        inv_vec = list( (self.vec[0]^-1, ) + gens ) # We'll fill this in one-by-one
+        
         W = WittRing(poly_ring, prec=P.prec, op_method=P.op_method)
         prod_vec = (W(self.vec)*W(inv_vec)).vec
         for i in range(1, self.prec):
             poly = prod_vec[i](inv_vec[1:])
             inv_vec[i] = -poly.constant_coefficient() / poly.monomial_coefficient(gens[i-1])
+        
         return C(P, vec=inv_vec)
     
     def _neg_(self):
