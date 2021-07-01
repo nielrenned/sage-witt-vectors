@@ -9,3 +9,5 @@ We add two classes: `WittRing` and `WittVector`, which behave like usual Sage ob
 # State of the Code Base
 
 This is still in the early stages. We have yet to optimize the operations, e.g. convert some functions to Cython, or profile the code. We also have a goal of using multiprocessing to get even more improvements.
+
+We have some unit tests, which are comparisons with the Magma codebase linked above.
