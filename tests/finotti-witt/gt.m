@@ -50,7 +50,7 @@ function Pol_GT_Form(f,p,n)
         coef:=IntToWitt(MonomialCoefficient(f,mon),p,n);
         Append(~res,[* coef, Degree(mon,1), Degree(mon,2) *]);
     end for;
-    
+
     return res;
 
 end function;
@@ -122,7 +122,7 @@ end function;
 function split_Ds(f,p,max,PR)
     // given a polynomial f (likely over Z/p^n) returns
     // [ \xi_0(f) , \xi_1(f), ... , \xi_max(f) ]
-    
+
     res:=[ PR!0 : i in [0..max] ];
     for mon in Monomials(f) do
         coef:=Integers()!(MonomialCoefficient(f,mon));
@@ -147,14 +147,14 @@ function GT_Ds(i,r,n,p,PR)
     PR2<t>:=PolynomialRing(PR1);
 
     tmp:=Min(n,n-r+1);
-    
+
     t1:=&+[ PR2.1^s*PR1.(s+1)^(p^(n-s)) : s in [1..tmp] ];
     t2:=&+[ PR2.1^s*PR1.(n+s+2)^(p^(n-s)) : s in [1..tmp] ];
 
     t:=t1^i*t2^(r-i);
     delete t1, t2;
 
-    
+
     t:=[ Coefficient(t,s) : s in [r..n] ];
     // t = [ D_{r,n}^{(i,r-i)}, ... , D_{n,n}^{(i,r-i)} ]
 
@@ -181,7 +181,7 @@ function Pol_Root(f,r)
         end for;
         res+:=nmon;
     end for;
-    
+
     return res;
 
 end function;
@@ -203,7 +203,7 @@ function GT1(f : pols:=[], tab:=[], vvars:=[])
 
     PR:=PolynomialRing(P,2*n+2);
     AssignNames(~PR,
-                [ "x" cat IntegerToString(i) : i in [0..n] ] cat 
+                [ "x" cat IntegerToString(i) : i in [0..n] ] cat
                 [ "y" cat IntegerToString(i) : i in [0..n] ] );
 
     maxdegx:=Max([t[2] : t in f]);
@@ -224,7 +224,7 @@ function GT1(f : pols:=[], tab:=[], vvars:=[])
                 derf:=GT_der(f,p,i,r,n,tab,pols);
 
                 // print "derf = ", derf;
-                
+
                 // now we need the Ds
                 Ds:=GT_Ds(i,r,n,p,PR);
                 // Ds=[ [D_{r,n,0}^{(i,r-i)} , ... , D_{r,n,n-r}^{(i,r-i)}],
@@ -252,17 +252,17 @@ function GT1(f : pols:=[], tab:=[], vvars:=[])
                                 v[s]:=PR.s;
                                 v[s+n+1]:=PR.(s+n+1);
                             end for;
-                            
+
                             // get D_{r,m} from D_{r,n}
                             tmp:=Evaluate(Ds[k-r+1][j-k+1],v);
                             tmp:=Pol_Root(tmp,p^(n-m));
 
-                            if #vvars ne 0 then 
+                            if #vvars ne 0 then
                                 res[m+1]:=res[m+1] cat [ Evaluate(term,vvars) : term in Terms(vt*tmp)];
                             else
                                 res[m+1]:=res[m+1] cat Terms(vt*tmp);
                             end if;
-                            
+
                         end for; // k
                         delete tmp, v, vt;
                     end for; // j
@@ -280,7 +280,7 @@ function GT1(f : pols:=[], tab:=[], vvars:=[])
         // print "res[", i, "] = ", res[i];
 
         ve:=vetav(p,n-i+1,res[i] : pols:=pols);
-        
+
         // print "ve = ", ve;
 
         for j in [(i+1)..(n+1)] do
@@ -296,7 +296,7 @@ function GT1(f : pols:=[], tab:=[], vvars:=[])
 
     return [ &+t : t in res ];
 
-end function; 
+end function;
 
 
 
@@ -367,13 +367,14 @@ end function;
 function split_Ds2(f,p,max,PR)
     // given a polynomial f (likely over Z/p^n) returns
     // [ \xi_0(f) , \xi_1(f), ... , \xi_max(f) ]
-    
+
     res:=[ PR!0 : i in [0..max] ];
     for mon in Monomials(f) do
         coef:=Integers()!(MonomialCoefficient(f,mon));
         vcoef:=IntToWitt(coef,p,max);
         for i in [1..(max+1)] do
-            res[i]+:=PR!(vcoef[i])*PR!mon;
+            //res[i]+:=PR!(vcoef[i])*PR!mon; // ambigous coercion
+            res[i]+:=PR!(vcoef[i])*Monomial(PR, Exponents(mon));
         end for;
     end for;
 
@@ -391,14 +392,14 @@ function GT_Ds2(i,r,n,p,PR)
     PR2<t>:=PolynomialRing(PR1);
 
     tmp:=Min(n,n-r+1);
-    
+
     t1:=&+[ PR2.1^s*PR1.(s+1)^(p^(n-s)) : s in [1..tmp] ];
     t2:=&+[ PR2.1^s*PR1.(n+s+2)^(p^(n-s)) : s in [1..tmp] ];
 
     t:=t1^i*t2^(r-i);
     delete t1, t2;
 
-    
+
     t:=[ Coefficient(t,s) : s in [r..n] ];
     // t = [ D_{r,n}^{(i,r-i)}, ... , D_{n,n}^{(i,r-i)} ]
 
@@ -425,7 +426,7 @@ function GT2(f : bintab:=[], tab:=[], vvars:=[])
 
     PR:=PolynomialRing(P,2*n+2);
     AssignNames(~PR,
-                [ "x" cat IntegerToString(i) : i in [0..n] ] cat 
+                [ "x" cat IntegerToString(i) : i in [0..n] ] cat
                 [ "y" cat IntegerToString(i) : i in [0..n] ] );
 
     maxdegx:=Max([t[2] : t in f]);
@@ -441,12 +442,12 @@ function GT2(f : bintab:=[], tab:=[], vvars:=[])
 
     for r in [0..n] do
         for i in [0..r] do
-            if (i le maxdegx) and (r-i le maxdegy) then            
+            if (i le maxdegx) and (r-i le maxdegy) then
                 // first, compute the derivative
                 derf:=GT_der2(f,p,i,r,n,tab,bintab);
 
                 // print "derf = ", derf;
-                
+
                 // now we need the Ds
                 Ds:=GT_Ds2(i,r,n,p,PR);
                 // Ds=[ [D_{r,n,0}^{(i,r-i)} , ... , D_{r,n,n-r}^{(i,r-i)}],
@@ -474,17 +475,17 @@ function GT2(f : bintab:=[], tab:=[], vvars:=[])
                                 v[s]:=PR.s;
                                 v[s+n+1]:=PR.(s+n+1);
                             end for;
-                            
+
                             // get D_{r,m} from D_{r,n}
                             tmp:=Evaluate(Ds[k-r+1][j-k+1],v);
                             tmp:=Pol_Root(tmp,p^(n-m));
 
-                            if #vvars ne 0 then 
+                            if #vvars ne 0 then
                                 res[m+1]:=res[m+1] cat [ Evaluate(term,vvars) : term in Terms(vt*tmp)];
                             else
                                 res[m+1]:=res[m+1] cat Terms(vt*tmp);
                             end if;
-                            
+
                         end for; // k
                         delete tmp, v, vt;
                     end for; // j
@@ -503,7 +504,7 @@ function GT2(f : bintab:=[], tab:=[], vvars:=[])
         // print "res[", i, "] = ", res[i];
 
         ve:=vetav2(p,n-i+1,res[i] : bintab:=bintab);
-        
+
         // print "ve = ", ve;
 
         for j in [(i+1)..(n+1)] do
@@ -519,7 +520,7 @@ function GT2(f : bintab:=[], tab:=[], vvars:=[])
 
     return [ &+t : t in res ];
 
-end function; 
+end function;
 
 
 
@@ -593,7 +594,7 @@ end function;
 function split_Ds3(f,p,max)
     // given a polynomial f (likely over Z/p^n) returns
     // [ \xi_0(f) , \xi_1(f), ... , \xi_max(f) ]
-    
+
     PR:=Parent(f);
     m:=Rank(PR);
     PR3:=PolynomialRing(GF(p),m); // will return over GF(p)
@@ -604,7 +605,9 @@ function split_Ds3(f,p,max)
         coef:=Integers()!(MonomialCoefficient(f,mon));
         vcoef:=IntToWitt(coef,p,max);
         for i in [1..(max+1)] do
-            res[i]+:=PR3!(vcoef[i])*PR3!mon;
+            //res[i]+:=PR3!(vcoef[i])*PR3!mon;  // ambigous coercion
+            //res[i]+:=PR3!(vcoef[i])*Monomial(PR3, Exponents(mon));
+            res[i]+:=(vcoef[i])*Monomial(PR3, Exponents(mon));
         end for;
     end for;
 
@@ -625,7 +628,7 @@ function GT_Ds3(n,r,p,PR)
 
 
     tmp:=Min(n,n-r+1); // in case r=0
-    t1:=&+[ PR2.1^s*PR1.(s+1)^(p^(n-s)) : s in [1..tmp] ];    
+    t1:=&+[ PR2.1^s*PR1.(s+1)^(p^(n-s)) : s in [1..tmp] ];
 
     vx:=[PR2!1,t1]; // contains tthe powers of t1
 
@@ -642,12 +645,18 @@ function GT_Ds3(n,r,p,PR)
             // print "splid Ds";
             tmp2:=split_Ds3(Coefficient(tmp1,k),p,n-k);
             for t in [0..(n-k)] do
-                vecDs[[n,r,i,k,t]]:=PR!tmp2[t+1];
+                //vecDs[[n,r,i,k,t]]:=PR!tmp2[t+1];  // ambiguous coercion
+                if tmp2[t+1] eq 0 then
+                    vecDs[[n,r,i,k,t]]:= PR!0;
+                else
+                    vecDs[[n,r,i,k,t]]:= &+[MonomialCoefficient(tmp2[t+1], mon)*Monomial(PR, Exponents(mon)) : mon in Monomials(tmp2[t+1])];
+                end if;
             end for;
         end for;
     end for;
 
     return vecDs;
+    print vecDs;
 
 end function;
 
@@ -669,7 +678,7 @@ function GT3(f : bintab:=[], tab:=[], vvars:=[])
 
     PR:=PolynomialRing(P,2*n+2);
     AssignNames(~PR,
-                [ "x" cat IntegerToString(i) : i in [0..n] ] cat 
+                [ "x" cat IntegerToString(i) : i in [0..n] ] cat
                 [ "y" cat IntegerToString(i) : i in [0..n] ] );
 
     maxdegx:=Max([t[2] : t in f]);
@@ -684,19 +693,19 @@ function GT3(f : bintab:=[], tab:=[], vvars:=[])
     res:=[ [] : s in [0..n] ];
 
     for r in [0..n] do
-        
+
         // print "compute Ds: r, n = ", r, n;
         vecDs:=GT_Ds3(n,r,p,PR);
 
         for i in [0..r] do
             if (i le maxdegx) and (r-i le maxdegy) then
-                
+
                 // first, compute the derivative
                 // print "compute der.";
                 derf:=GT_der3(f,p,i,r,n,tab,bintab);
 
                 // print "derf = ", derf;
-                
+
                 for m in [r..n] do
                     for j in [r..m] do
                         for k in [r..j] do
@@ -714,7 +723,7 @@ function GT3(f : bintab:=[], tab:=[], vvars:=[])
                                 v[s]:=PR.s;
                                 v[s+n+1]:=PR.(s+n+1);
                             end for;
-                            
+
                             // get D_{r,m} from D_{r,n}
                             // print "evaluate Ds";
                             tmp:=Evaluate(vecDs[[n,r,i,k,j-k]],v);
@@ -727,7 +736,7 @@ function GT3(f : bintab:=[], tab:=[], vvars:=[])
                             else
                                 res[m+1]:=res[m+1] cat Terms(vt*tmp);
                             end if;
-                            
+
                         end for; // k
                         delete tmp, v, vt;
                     end for; // j
@@ -748,11 +757,11 @@ function GT3(f : bintab:=[], tab:=[], vvars:=[])
 
         //print "compute etas";
         ve:=vetav3(p,n-i+1,res[i] : bintab:=bintab);
-        
+
         // print "ve = ", ve;
 
         for j in [(i+1)..(n+1)] do
-            if ve[j-i] ne 0 then 
+            if ve[j-i] ne 0 then
                 Append(~res[j],ve[j-i]);
             end if;
         end for;
@@ -763,7 +772,7 @@ function GT3(f : bintab:=[], tab:=[], vvars:=[])
 
     return [ &+t : t in res ];
 
-end function; 
+end function;
 
 
 // /////////////////////////////////////////////////
@@ -845,4 +854,4 @@ function WittPower(v,k : choice:=1, pols:=[], bintab:=[])
     else
         return WittPower1(v, k : pols:=pols);
     end if;
-end function;    
+end function;

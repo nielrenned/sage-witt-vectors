@@ -37,7 +37,7 @@ function WittSum1(v1,v2 : pols:=[])
             // add the terms coming from res[i-1]
             temp:=vetav(p,n+2-i,[res[i-1][j],&+(res[i-1][1..(j-1)])] : pols:=pols); // note that here it just eval. the pols.
             for t in [i..(n+1)] do
-                if temp[t-i+1] ne 0 then 
+                if temp[t-i+1] ne 0 then
                     Append(~res[t],temp[t-i+1]);
                 end if;
             end for;
@@ -73,7 +73,7 @@ function WittSum2(v1,v2 : bintab:=[])
             // add the terms coming from res[i-1]
             temp:=vetav2(p,n+2-i,[res[i-1][j],&+(res[i-1][1..(j-1)])] : bintab:=bintab); // note that here it just eval. the pols.
             for t in [i..(n+1)] do
-                if temp[t-i+1] ne 0 then 
+                if temp[t-i+1] ne 0 then
                     Append(~res[t],temp[t-i+1]);
                 end if;
             end for;
@@ -109,7 +109,7 @@ function WittSum3(v1,v2 : bintab:=[])
             // add the terms coming from res[i-1]
             temp:=vetav3(p,n+2-i,[res[i-1][j],&+(res[i-1][1..(j-1)])] : bintab:=bintab); // note that here it just eval. the pols.
             for t in [i..(n+1)] do
-                if temp[t-i+1] ne 0 then 
+                if temp[t-i+1] ne 0 then
                     Append(~res[t],temp[t-i+1]);
                 end if;
             end for;
@@ -293,7 +293,7 @@ function WittNeg2(v : bintab:=[])
     n := #v;
     //P := Parent(v[1]);
     P := Universe(v);
-    vnone := [ P!1 : i in [1..n] ]; 
+    vnone := [ P!1 : i in [1..n] ];
     return WittProd2(vnone,v : bintab:=bintab);
 end function;
 
@@ -307,7 +307,7 @@ function WittNeg3(v : bintab:=[])
     n := #v;
     //P := Parent(v[1]);
     P := Universe(v);
-    vnone := [ P!1 : i in [1..n] ]; 
+    vnone := [ P!1 : i in [1..n] ];
     return WittProd3(vnone,v : bintab:=bintab);
 end function;
 
@@ -341,7 +341,7 @@ function WittInv1(v : pols:=[])
     end for;
     return res;
 end function;
-    
+
 
 
 function WittInv2(v :  bintab:=[])
@@ -367,7 +367,7 @@ function WittInv2(v :  bintab:=[])
     end for;
     return res;
 end function;
-    
+
 
 
 function WittInv3(v :  bintab:=[])
@@ -393,7 +393,7 @@ function WittInv3(v :  bintab:=[])
     end for;
     return res;
 end function;
-    
+
 
 
 // ///////////////////////////////////////
@@ -430,7 +430,7 @@ function WittSum(v,w : choice:=1, pols:=[], bintab:=[])
         tmp := SeriesToWittV(v1 + PX!w1);
         return [ P!x : x in tmp ];
     end if;
-    
+
     if choice eq 2 then
         return WittSum2(v,w :  bintab:=bintab);
     elif choice eq 3 then
@@ -593,4 +593,3 @@ function WittDiv(v,w : choice:=1, pols:=[], bintab:=[])
         return WittProd1(v, WittInv1(w : pols:=pols) : pols:=pols);
     end if;
 end function;
-

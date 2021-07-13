@@ -46,10 +46,10 @@ function pthroot(x : n:=1)
             else
 		deg:=Degree(tterm,j);
             end if;
-	    
+
 	    error if (deg mod p^n) ne 0,
 		  "Exponent of ", tterm, " not divisible by ", p^n;
-	    
+
 	    if r eq 1 then
                 tterm:=Evaluate(tterm,1)*(R.1)^(deg div p^n);
             else
@@ -72,22 +72,22 @@ function pthroot(x : n:=1)
                 else
 		    deg:=Degree(tterm,j);
                 end if;
-		
+
 		error if (deg mod p^n) ne 0,
 		      "Exponent of ", tterm, " not divisible by ", p^n;
-		
+
 		if r eq 1 then
                     tterm:=Evaluate(tterm,1)*(R.1)^(deg div p^n);
                 else
                     tterm:=Evaluate(tterm,j,1)*(R.j)^(deg div p^n);
                 end if;
-            
+
 	    end for;
 	    newden+:=tterm;
 
         end for;
     end if;
-    
+
     return F!newnum/F!newden;
 
 end function;
@@ -114,7 +114,7 @@ function lift_j(p,n : choice:=1, pols:=[], bintab:=[], tab:=[])
     if #tab eq 0 then
         tab:=bin_tab(p+1,p^(n+1)); // table of binomials to use
     end if;
-    
+
     for i in [1..n] do
         mp := Pol_GT_Form(mpol,p,i);
         v1 := [ P!x : x in vj ] cat [ ji ];
@@ -127,7 +127,7 @@ function lift_j(p,n : choice:=1, pols:=[], bintab:=[], tab:=[])
         Append(~vj,F!(pthroot(vji)));
 
         delete vji;
-        
+
     end for;
 
     return [ F!x : x in vj ];
@@ -150,7 +150,7 @@ function lift_j0(j0,n : choice:=1, pols:=[], bintab:=[], tab:=[])
         print("j0 cannot be in GF(p^2)");
         return [j0];
     end if;
-    
+
     P<ji> := PolynomialRing(F);
     mpol := reducepol(ClassicalModularPolynomial(p),p,n+1);
     vj := [ P!j0 ];
@@ -167,7 +167,7 @@ function lift_j0(j0,n : choice:=1, pols:=[], bintab:=[], tab:=[])
     if #tab eq 0 then
         tab:=bin_tab(p+1,p^(n+1)); // table of binomials to use
     end if;
-    
+
     for i in [1..n] do
         mp := Pol_GT_Form(mpol,p,i);
         v1 := [ P!x : x in vj ] cat [ ji ];
@@ -180,7 +180,7 @@ function lift_j0(j0,n : choice:=1, pols:=[], bintab:=[], tab:=[])
         Append(~vj,Root(vji,p));
 
         delete vji;
-        
+
     end for;
 
     return [ F!x : x in vj ];
@@ -221,8 +221,8 @@ function lift_j_int(p,n: choice:=1, pols:=[], bintab:=[], tab:=[])
     if p lt 5 then
         print("Characteristic must be > 3.");
         return [];
-    end if; 
-                 
+    end if;
+
     // precompute stuff!
     if (choice eq 1) and (#pols eq 0) then
         pols := etapols(p,n);
@@ -242,7 +242,7 @@ function lift_j_int(p,n: choice:=1, pols:=[], bintab:=[], tab:=[])
     k := Ceiling(Log(p,degGi(p,n)+p^n+1));
     F<a> := GF(p^k);
     P<j0> := RationalFunctionField(F);
-   
+
     r := (p-1) div 2;
     r1 := Ceiling(r/3);
     r2 := Floor(r/2);
@@ -255,11 +255,11 @@ function lift_j_int(p,n: choice:=1, pols:=[], bintab:=[], tab:=[])
     else
         iota := 1;
     end if;
-     
+
 
     I := []; // inputs (for interpolation)
     M := []; // values (for interpolation)
-    
+
     degFn := degGi(p,n) + p^n - iota;
 
     // compute enough "numerical" liftings for interpolation
@@ -300,13 +300,13 @@ function lift_j_int(p,n: choice:=1, pols:=[], bintab:=[], tab:=[])
         vV := [ M[j][i+1]*Evaluate(Gi,I[j]) : j in [1..degFi + 1] ];
 
         Append(~vj,P!Interpolation(vI,vV)/Gi);
-        
+
     end for;
 
     PP<j0>:=RationalFunctionField(GF(p));
-    
+
     return [ PP!x : x in vj];
-    
+
 end function;
 
 

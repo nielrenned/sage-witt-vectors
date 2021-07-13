@@ -51,14 +51,14 @@ function lift(a0,b0,n : pols:=[], minimal:=false)
 
     f:=x0^3+a0*x0+b0;
     ff:=f^((p-1) div 2);
-    
+
     // Hasse Invariant
     HI:=F!(Coefficient(ff,p-1));
 
-    
+
     // main loop
     for i in [1..n] do
-        
+
         //polynomial ring for this coordinate
         M:=(3*p^(i-1)-1) div 2; // c_i's
         // N:=((i+3)*p^i - i*p^(i-1) - 3) div 2; // d_i's
@@ -72,7 +72,7 @@ function lift(a0,b0,n : pols:=[], minimal:=false)
         else
            tmppf:=tmppf^p*ff;
         end if;
-           
+
         Fi:= HI^(-(p^i-1) div (p-1))*tmppf - x0^(p^i-1);
         if i gt 1 then
             Fi-:=&+[ resF[j+1]^(p^(i-j)-1)*Derivative(resF[j+1]) :
@@ -86,7 +86,7 @@ function lift(a0,b0,n : pols:=[], minimal:=false)
 
         // //////////////////////////////////////////////////////////
         // ADD CONDITION IF NOT MINIMAL!!!!!!!
-        
+
         if (not minimal) and (i eq 2) then
             tmp:= F!(3/4)*resF[2]^2;
             Fi+:= &+[(Coefficient(tmp,Integers()!(i/p+p)))^p*Pi.1^i :
@@ -100,7 +100,7 @@ function lift(a0,b0,n : pols:=[], minimal:=false)
 
 
         // //////////////////////////////////////////////////////////
-        
+
         va:=[ Pi!x : x in resa ] cat [Pi.3];
         vb:=[ Pi!x : x in resb ] cat [Pi.4];
         vF:=[ Evaluate(x,Pi.1) : x in resF ] cat [Fi];
@@ -119,9 +119,9 @@ function lift(a0,b0,n : pols:=[], minimal:=false)
         LHS:=GTy[i+1];
         delete GTy;
         LHS:=Coefficient(LHS,M+6,0); // terms without Hn
-        
+
         // now, replace y0^2 by f
-        deg:=Degree(LHS,2);   
+        deg:=Degree(LHS,2);
         tmppf2:=1;
         tmpLHS:=Coefficient(LHS,2,0);
         for d in [j : j in [2..deg] | (j mod 2) eq 0 ] do
@@ -130,12 +130,12 @@ function lift(a0,b0,n : pols:=[], minimal:=false)
         end for;
 
         RHS-:=tmpLHS;
-        
+
         delete tmpLHS, LHS, tmppf2;
 
         tmppf2:=Evaluate(tmppf*f,Pi.1); //f^((p^i+1)/2)
         // long division
-        
+
         RHS*:=Pi!(1/2);
         deg1:=Degree(RHS,Pi.1);
         deg2:=(3*(p^i+1) div 2);
@@ -152,7 +152,7 @@ function lift(a0,b0,n : pols:=[], minimal:=false)
         delete tmppf2;
 
         vrem:=Coefficients(RHS,1);
-       
+
         // matrix of coefficients
         neqts:=#vrem;
         Mat:=Matrix(F,2+M,neqts,
@@ -160,23 +160,23 @@ function lift(a0,b0,n : pols:=[], minimal:=false)
                  : k in [ ii : ii in [1..(2+(M+1))] | ii ne 3+p^(i-1) ]]);
 
         vec:=Vector(F,[ -Evaluate(vrem[j],[ 0 : k in [1..(2+2+(M+1)+1)]]) : j in [1..neqts]]);
-        
+
         vsol:=Solution(Mat,vec);
 
         // to convert solutoions to Pres/F
         evalvec:=[x0,0] cat [ vsol[j] : j in [1..2+p^(i-1)] ] cat [0] cat
-                 [vsol[j] : j in [2+p^(i-1)+1..(2+M)]] cat [0]; 
+                 [vsol[j] : j in [2+p^(i-1)+1..(2+M)]] cat [0];
 
         //print evalvec;
-        
+
         Append(~resa,vsol[1]);
         Append(~resb,vsol[2]);
         Append(~resF,Evaluate(Fi,evalvec));
         Append(~resH,Evaluate(quo,evalvec));
 
-    
+
     end for;
-        
+
     return resa, resb, resF, resH;
 
 end function;

@@ -79,10 +79,10 @@ end function;
 
 /*     ZZ:=Integers(); */
 /*     PR<x>:=PolynomialRing(ZZ); */
-    
+
 
 /*     R:=ResidueClassRing(p^n); */
-    
+
 /*     f:=x^(p-1)-1; */
 /*     fp:=(p-1)*x^(p-2); */
 
@@ -100,7 +100,7 @@ end function;
 /*     return(res); */
 
 /* end function; */
-	    
+
 
 
 /* // Convert Integer to Witt Vector */
@@ -119,10 +119,10 @@ end function;
 /*     end if; */
 
 /*     // print primr; */
-    
+
 /*     res:=[]; */
 /*     numb:=n mod p^l; */
-    
+
 /*     for i in [1..l] do */
 /* 	entry:=numb mod p; */
 /* 	Append(~res,Zp!entry); */
@@ -246,7 +246,7 @@ function vetav(p,k,v : pols:=[ ])
             pols:=pols[1..(k-i+1)];
             tmp:=$$(p,k-i+1,res[i-1] : pols:=pols);
             for t in [i..k] do
-                if tmp[t-i+1] ne 0 then 
+                if tmp[t-i+1] ne 0 then
                     Append(~res[t],tmp[t-i+1]);
                 end if;
             end for;
@@ -276,7 +276,7 @@ function BinTab(p,k)
 
     res:=[ ];
     for i in [1..k] do
-        num:=p^i; 
+        num:=p^i;
         tmp:=[ R!1 ];  // 1/p*Biniomial(p,1)
         for j in [2..(num-1)] do
             a:=num-(j-1);
@@ -309,7 +309,7 @@ vetav2 := function(p,k,v : bintab:=[] )
 
     // firts, remove zeros!
     v:=vRemoveZeros(v);
-    
+
     lgt:=#v;
     // print "length = ", lgt;
     if lgt eq 1 then
@@ -339,12 +339,12 @@ vetav2 := function(p,k,v : bintab:=[] )
         for j in [1..(k-1)] do
             v:=$$(p,k-j,res[j] : bintab:=bintab );
             for i in [1..(k-j)] do
-                if v[i] ne 0 then 
+                if v[i] ne 0 then
                     Append(~res[j+i],v[i]);
                 end if;
             end for;
         end for;
-        
+
         return [ &+term : term in res];
 
 
@@ -380,7 +380,7 @@ vetav2 := function(p,k,v : bintab:=[] )
             // delete temp;
             tmp:=$$(p,k-i+1,res[i-1] : bintab:=bintab );
             for t in [i..k] do
-                if tmp[t-i+1] ne 0 then 
+                if tmp[t-i+1] ne 0 then
                     Append(~res[t],tmp[t-i+1]);
                 end if;
             end for;
@@ -403,7 +403,7 @@ procedure vetav3p(p,k,v,~pre : bintab:=[] )
     //    polynomials eta_i(v) for i=1, ... , k
 
 
-    if (not IsDefined(pre,<k,v>)) and (not IsDefined(pre,<k,vRemoveZeros(v)>)) then 
+    if (not IsDefined(pre,<k,v>)) and (not IsDefined(pre,<k,vRemoveZeros(v)>)) then
 
         // firts, remove zeros!
         v:=vRemoveZeros(v);
@@ -446,7 +446,7 @@ procedure vetav3p(p,k,v,~pre : bintab:=[] )
                             // print "i = ", i;
                             // if we have <k-j,res[j]>, we have all previous!
                             // print res[j];
-                            if pre[<i,res[j]>] ne 0 then 
+                            if pre[<i,res[j]>] ne 0 then
                                 Append(~res[j+i],pre[<i,res[j]>]);
                             end if;
                         end for;
@@ -466,11 +466,11 @@ procedure vetav3p(p,k,v,~pre : bintab:=[] )
                 v1:=[ v[i] : i in [1..(lgt div 2)] ];
                 v2:=[ v[i] : i in [((lgt div 2)+1)..lgt] ];
                 v3:=vRemoveZeros([ &+v1, &+v2 ]);
-                
+
                 if (#v1 ne 1) and (not IsDefined(pre,<k,v1>)) then
                     $$(p,k,v1,~pre : bintab:=bintab);
                 end if;
-                
+
                 if not IsDefined(pre,<k,v2>) then
                     $$(p,k,v2,~pre : bintab:=bintab);
                 end if;
@@ -559,7 +559,3 @@ end function;
 pterms := function(f,p,r)
     return &+[ x^(p^r) : x in Terms(f) ];
 end function;
-
-
-
-
