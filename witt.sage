@@ -138,10 +138,8 @@ class WittVector(CommutativeRingElement):
             p = P.prime
             bin_table = P.binomial_table
             for n in range(1, prec):
-                #G_n = [x[0]^(p^n) * y[n], y[0]^(p^n) * x[n]]
-                #G_n.extend(x[i]^(p^i) * y[n-i]^(p^(n-i)) for i in range(1,n))
                 G_n = [_fcppow(x[0], p^n) * y[n], _fcppow(y[0], p^n) * x[n]]
-                G_n.extend(_fcppow(x[i], p^i) * _fcppow(y[n-i], p^(n-i)) for i in range(1, n))
+                G_n.extend(_fcppow(x[i], p^(n-i)) * _fcppow(y[n-i], p^i) for i in range(1, n))
                 for i in range(0, n):
                     G_n.append(P.eta_bar(G[i], n-i))
                 G.append(G_n)
